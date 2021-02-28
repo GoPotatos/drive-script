@@ -13,10 +13,6 @@ from pydrive.auth import GoogleAuth ,ServiceAccountCredentials
 from apiclient.discovery import build
 proxy = 'http://localhost:8080'
 
-os.environ['http_proxy'] = proxy 
-os.environ['HTTP_PROXY'] = proxy
-os.environ['https_proxy'] = proxy
-os.environ['HTTPS_PROXY'] = proxy
 gauth = GoogleAuth()
 scope = ['https://www.googleapis.com/auth/drive']
 gauth.credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_location, scope)
