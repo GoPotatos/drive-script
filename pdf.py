@@ -1,6 +1,6 @@
 pages_number=45
-folder1=r'D:\pdf-splitter\\'
-folder2=r'D:\pdf-splitter\split\\'
+folder1=r'D:/Ullman/pdf-splitter/'
+folder2=r'D:/Ullman/pdf-splitter/split/'
 id=""
 json_file_location="credentials.json"
 from PyPDF2 import PdfFileReader as reader, PdfFileWriter as writer
@@ -29,14 +29,16 @@ if flag=="2":
 	pdf_list=[x for x in list1 if re.search(".\.PDF$",x,re.IGNORECASE)]
 	for x in pdf_list:
 		output_name=x
+		output_path=os.path.join(folder1,output_name)
 		split_output_name="Split_"+output_name
-		print("Directory updated "+output_name)
-		pdf=reader(folder1+output_name)
+		split_path=os.path.join(folder2,split_output_name)
+		print("Directory updated "+output_path)
+		pdf=reader(output_path)
 		outputWriter=writer()
 		for x in range(pages_number):
 			outputWriter.addPage(pdf.getPage(x))
 			
-		with open(folder2+split_output_name,"wb")as outputPDF:		
+		with open(split_path,"wb")as outputPDF:		
 			outputWriter.write(outputPDF)
 			outputPDF.close()
 
@@ -44,7 +46,7 @@ if flag=="2":
 			"parents":  [{"id": id}], 
 			"mimeType": "application/pdf"})
 
-		file2.SetContentFile(folder2+split_output_name)
+		file2.SetContentFile(split_path)
 		file2.Upload()
 		print(split_output_name+" Successfully Uploaded")
 	sys.exit()
@@ -60,14 +62,16 @@ while True:
 	if len(unique):
 		for x in unique:
 			output_name=x
+			output_path=os.path.join(folder1,output_name)
 			split_output_name="Split_"+output_name
-			print("Directory updated "+output_name)
-			pdf=reader(folder1+output_name)
+			split_path=os.path.join(folder2,split_output_name)
+			print("Directory updated "+output_path)
+			pdf=reader(output_path)
 			outputWriter=writer()
 			for x in range(pages_number):
 				outputWriter.addPage(pdf.getPage(x))
 				
-			with open(folder2+split_output_name,"wb")as outputPDF:		
+			with open(split_path,"wb")as outputPDF:		
 				outputWriter.write(outputPDF)
 				outputPDF.close()
 
@@ -75,7 +79,7 @@ while True:
 				"parents":  [{"id": id}], 
 				"mimeType": "application/pdf"})
 
-			file2.SetContentFile(folder2+split_output_name)
+			file2.SetContentFile(split_path)
 			file2.Upload()
-			print(split_output_name+" Successfully Uploaded")
-	sleep(2)
+			print(" Successfully Uploaded",split_output_name)
+	sleep(5)
