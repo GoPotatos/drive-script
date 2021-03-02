@@ -82,4 +82,4 @@ while True:
 			file2.SetContentFile(split_path)
 			file2.Upload()
 			print(" Successfully Uploaded",split_output_name)
-	sleep(5)
+	sleep(2)
