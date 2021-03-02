@@ -12,10 +12,10 @@ from time import sleep
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth ,ServiceAccountCredentials
 proxy = 'http://localhost:8080'
-os.environ['http_proxy'] = proxy 
+'''os.environ['http_proxy'] = proxy 
 os.environ['HTTP_PROXY'] = proxy
 os.environ['https_proxy'] = proxy
-os.environ['HTTPS_PROXY'] = proxy
+os.environ['HTTPS_PROXY'] = proxy'''
 flag=sys.argv[1]
 gauth = GoogleAuth()
 scope = ['https://www.googleapis.com/auth/drive']
