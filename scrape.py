@@ -74,9 +74,9 @@ raw_edition=doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2
 try:
 	raw_edition.index("Edition")
 	edition=normalize(raw_edition)
+	edition="Edition: "+edition
 except:
 	edition=""
-
 
 print(title+subtitle,author,print_isbn,etext_isbn,edition)
 
@@ -85,6 +85,6 @@ print(title+subtitle,author,print_isbn,etext_isbn,edition)
 #print(script)
 
 post_title=title+subtitle+" book";
-selftext="Title: "+title+subtitle+"\n\n"+"Author: "+author+"\n\n"+"Print ISBN: " + print_isbn + "\n\n"+"eText ISBN: "+etext_isbn+"\n\n"+"Edition: "+edition+"\n\n"
+selftext="Title: "+title+subtitle+"\n\n"+"Author: "+author+"\n\n"+"Print ISBN: " + print_isbn + "\n\n"+"eText ISBN: "+etext_isbn+"\n\n"+edition+"\n\n"
 post=reddit.subreddit(SUBREDDIT_NAME).submit(title=post_title,selftext=selftext)
 print(reddit.submission(post).url)
