@@ -62,18 +62,23 @@ with open(PICKLE_PATH,"wb") as file:
 #r=requests.get(url)
 doc=html.fromstring(r.content)
 title=doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/h1/text()")[0].strip()
+try:
+	subtitle=doc.xpath('//div[contains(@class,"subtitle")]/text()')[0].strip()
+	subtitle=" : "+subtitle
+except:
+	subtitle=""
 author=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/p/text()")[0])
 print_isbn=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[2]/h2/text()")[0])
 etext_isbn=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[3]/h2/text()")[0])
 edition=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[4]/text()")[0])
 
-print(title,author,print_isbn,etext_isbn,edition)
+print(title+subtitle,author,print_isbn,etext_isbn,edition)
 
 #script=doc.xpath("/html/head/script[contains(@type,'application/ld+json')]/text()")[2]
 
 #print(script)
 
-post_title=title+" book";
-selftext="Title: "+title+"\n\n"+"Author: "+author+"\n\n"+"Print ISBN: " + print_isbn + "\n\n"+"eText ISBN: "+etext_isbn+"\n\n"+"Edition: "+edition+"\n\n"
+post_title=title+subtitle+" book";
+selftext="Title: "+title+subtitle+"\n\n"+"Author: "+author+"\n\n"+"Print ISBN: " + print_isbn + "\n\n"+"eText ISBN: "+etext_isbn+"\n\n"+"Edition: "+edition+"\n\n"
 post=reddit.subreddit(SUBREDDIT_NAME).submit(title=post_title,selftext=selftext)
 print(reddit.submission(post).url)
