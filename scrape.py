@@ -49,42 +49,57 @@ reddit.validate_on_submit=True
 #sys.exit()
 session=requests.session()
 
-if(os.path.isfile(PICKLE_PATH)):
-	with open(PICKLE_PATH,"rb") as file:
-		session.cookies.update(pickle.load(file))
+
+
+def scrape_link(link):
+	if(os.path.isfile(PICKLE_PATH)):
+		with open(PICKLE_PATH,"rb") as file:
+			session.cookies.update(pickle.load(file))
+			file.close()
+	scraper = cloudscraper.create_scraper(sess=session,browser=browser)
+	r=scraper.get(link)
+
+
+	with open(PICKLE_PATH,"wb") as file:
+			pickle.dump(scraper.cookies,file)
+			file.close()
+	#r=requests.get(url)
+	doc=html.fromstring(r.content)
+	title=doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/h1/text()")[0].strip()
+	try:
+		subtitle=doc.xpath('//div[contains(@class,"subtitle")]/text()')[0].strip()
+		subtitle=" : "+subtitle
+	except:
+		subtitle=""
+
+	author=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/p/text()")[0])
+	print_isbn=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[2]/h2/text()")[0])
+	etext_isbn=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[3]/h2/text()")[0])
+	raw_edition=doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[4]/text()")[0]
+	try:
+		raw_edition.index("Edition")
+		edition=normalize(raw_edition)
+		edition="Edition: "+edition
+	except:
+		edition=""
+
+	print(title+subtitle,author,print_isbn,etext_isbn,edition)
+
+	#script=doc.xpath("/html/head/script[contains(@type,'application/ld+json')]/text()")[2]
+
+	#print(script)
+
+	post_title=title+subtitle+" book";
+	selftext="Title: "+title+subtitle+"\n\n"+"Author: "+author+"\n\n"+"Print ISBN: " + print_isbn + "\n\n"+"eText ISBN: "+etext_isbn+"\n\n"+edition+"\n\n"
+	post=reddit.subreddit(SUBREDDIT_NAME).submit(title=post_title,selftext=selftext)
+	print(reddit.submission(post).url)	
+	
+if arg=="1":
+	scrape_link(sys.argv[2])
+else:
+	with open(sys.argv[2], encoding='utf-8-sig')as file:
+		lines=file.readlines()
+		for x in lines:
+			scrape_link(str(x).strip())
+			sleep(GAP*60)
 		file.close()
-scraper = cloudscraper.create_scraper(sess=session,browser=browser)
-r=scraper.get(url)
-
-with open(PICKLE_PATH,"wb") as file:
-		pickle.dump(scraper.cookies,file)
-		file.close()
-#r=requests.get(url)
-doc=html.fromstring(r.content)
-title=doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/h1/text()")[0].strip()
-try:
-	subtitle=doc.xpath('//div[contains(@class,"subtitle")]/text()')[0].strip()
-	subtitle=" : "+subtitle
-except:
-	subtitle=""
-author=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/p/text()")[0])
-print_isbn=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[2]/h2/text()")[0])
-etext_isbn=normalize(doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[3]/h2/text()")[0])
-raw_edition=doc.xpath("/html/body/div[2]/main/div[3]/div/div[2]/div[1]/div/div[2]/ul/li[4]/text()")[0]
-try:
-	raw_edition.index("Edition")
-	edition=normalize(raw_edition)
-	edition="Edition: "+edition
-except:
-	edition=""
-
-print(title+subtitle,author,print_isbn,etext_isbn,edition)
-
-#script=doc.xpath("/html/head/script[contains(@type,'application/ld+json')]/text()")[2]
-
-#print(script)
-
-post_title=title+subtitle+" book";
-selftext="Title: "+title+subtitle+"\n\n"+"Author: "+author+"\n\n"+"Print ISBN: " + print_isbn + "\n\n"+"eText ISBN: "+etext_isbn+"\n\n"+edition+"\n\n"
-post=reddit.subreddit(SUBREDDIT_NAME).submit(title=post_title,selftext=selftext)
-print(reddit.submission(post).url)
