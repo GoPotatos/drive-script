@@ -15,6 +15,7 @@ SUBREDDIT_NAME="test"
 USERAGENT="The Random User Agent"
 PICKLE_PATH="cookies"
 GAP=5
+arg=sys.argv[1]
 #url="https://www.vitalsource.com/en-ca/products/myers-39-psychology-for-the-ap-course-david-g-myers-v9781319121600"
 url=sys.argv[1]
 proxy = 'http://localhost:8080'
