@@ -32,8 +32,10 @@ def uploadFiles(files_list):
 		split_path=folder2+split_output_name
 		print("Directory updated "+split_path)
 		pages_range="1-"+str(pages_number)
-		subprocess.check_call(["cmd","/c","pdftk",output_path,"cat",pages_range,"output",split_path])
-			
+		try:
+			subprocess.check_call(["cmd","/c","pdftk",output_path,"cat",pages_range,"output",split_path])
+		except:
+			pass
 
 		file2 = drive.CreateFile({'title': split_output_name, 
 			"parents":  [{"id": id}], 
