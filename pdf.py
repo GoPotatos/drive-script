@@ -34,16 +34,16 @@ def uploadFiles(files_list):
 		pages_range="1-"+str(pages_number)
 		try:
 			subprocess.check_call(["cmd","/c","pdftk",output_path,"cat",pages_range,"output",split_path])
+			file2 = drive.CreateFile({'title': split_output_name, 
+			"parents":  [{"id": id}], 
+			"mimeType": "application/pdf"})
+			file2.SetContentFile(split_path)
+			file2.Upload()
+			print(split_output_name+" Successfully Uploaded")
 		except:
 			pass
 
-		file2 = drive.CreateFile({'title': split_output_name, 
-			"parents":  [{"id": id}], 
-			"mimeType": "application/pdf"})
-
-		file2.SetContentFile(split_path)
-		file2.Upload()
-		print(split_output_name+" Successfully Uploaded")
+		
 
 if flag=="2":
 	#print("Flag")
